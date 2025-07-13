@@ -1,0 +1,50 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0c0c0c;
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    width: 60px;  // Adjust as needed
+    height: auto;
+    margin-right: 15px;
+  }
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #38bdf8;
+}
+
+.logo-text {
+  text-align: center;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: #ffd700; // yellow color
+  font-family: 'Arial', sans-serif;
+}
+
+.tagline {
+  font-size: 10px;
+  font-style: italic;
+  color: #ffd700;
+  letter-spacing: 4px;
+  margin-top: 2px;
+  font-family: 'Brush Script MT', cursive;
+}
+
+

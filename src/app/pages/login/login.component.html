@@ -1,0 +1,39 @@
+<div class="login-wrapper">
+  <div class="login-box">
+    <h2>Login</h2>
+    <form >
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          ngModel
+          required
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          ngModel
+          required
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <button type="submit" >Login</button>
+
+      <p class="signup-link">
+        Don't have an account?
+        <a routerLink="/signup">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- (ngSubmit)="onLogin()" #loginForm="ngForm" -->
