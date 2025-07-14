@@ -12,6 +12,6 @@ export class TurfBookingServiceService {
 
   signUpAUser(signUpReq: any): Observable<any> {
     let url = `${this.apiUrl}/v1/user/signup`;
-    return this.http.post<any>(this.apiUrl, signUpReq);
+    return this.http.post<any>(url, signUpReq);
   }
 }
