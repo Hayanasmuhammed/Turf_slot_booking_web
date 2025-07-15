@@ -1,7 +1,7 @@
 <div class="signup-wrapper">
   <div class="signup-box">
     <h2>Create Account</h2>
-    <form >
+    <form #signupForm="ngForm" (ngSubmit)="onSignup(signupForm)">
       <div class="form-group">
         <label for="name">Name</label>
         <input
@@ -38,7 +38,7 @@
         />
       </div>
 
-      <button type="submit" >Sign Up</button>
+      <button type="submit">Sign Up</button>
 
       <p class="login-link">
         Already have an account?
@@ -48,4 +48,4 @@
   </div>
 </div>
 
-<!-- #signupForm="ngForm" (ngSubmit)="onSignup(signupForm)" -->
+<!--  -->
