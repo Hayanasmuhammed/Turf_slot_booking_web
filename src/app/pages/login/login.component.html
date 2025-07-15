@@ -1,4 +1,4 @@
-<div class="login-wrapper">
+<!-- <div class="login-wrapper">
   <div class="login-box">
     <h2>Login</h2>
     <form >
@@ -34,6 +34,76 @@
       </p>
     </form>
   </div>
-</div>
+</div> -->
 
 <!-- (ngSubmit)="onLogin()" #loginForm="ngForm" -->
+<div class="auth-bg-wrapper">
+  <div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div
+      class="form-container bg-white rounded-4 shadow p-4 w-100"
+      style="max-width: 400px"
+    >
+      <h3 class="text-center mb-4 fw-bold">Login Form</h3>
+
+      <div class="d-flex mb-4 toggle-buttons">
+        <button
+          class="btn w-50 rounded-start toggle-btn"
+          [class.active]="isLogin"
+          (click)="switchMode(true)"
+        >
+          Login
+        </button>
+        <button
+          class="btn w-50 rounded-end toggle-btn"
+          [class.active]="!isLogin"
+          (click)="switchMode(false)"
+        >
+          Signup
+        </button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="authForm" novalidate>
+        <div class="mb-3">
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email Address"
+            formControlName="email"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Password"
+            formControlName="password"
+            required
+          />
+        </div>
+
+        <div class="mb-3 text-end" *ngIf="isLogin">
+          <a href="#" class="text-decoration-none text-primary small"
+            >Forgot password?</a
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-3 shadow-sm">
+          {{ isLogin ? "Login" : "Signup" }}
+        </button>
+
+        <div class="text-center">
+          <span *ngIf="isLogin"
+            >Not a member?
+            <a href="#" (click)="switchMode(false)">Signup now</a></span
+          >
+          <span *ngIf="!isLogin"
+            >Already have an account?
+            <a href="#" (click)="switchMode(true)">Login now</a></span
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

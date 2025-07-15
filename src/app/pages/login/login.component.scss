@@ -71,3 +71,41 @@
     }
   }
 }
+
+.form-container {
+  background-color: #fff;
+}
+
+.toggle-buttons .toggle-btn {
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
+  transition: all 0.3s ease-in-out;
+  font-weight: 500;
+}
+
+.toggle-buttons .toggle-btn.active {
+  background: linear-gradient(to right, #0d6efd, #1a75ff);
+  color: #fff;
+  font-weight: 600;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+a {
+  cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  .form-container {
+    padding: 2rem 1rem;
+    margin: 0 1rem;
+  }
+}
+
+.auth-bg-wrapper {
+  min-height: 100vh;
+  background: url('/assets/images/login-bg-img.jpg') no-repeat center center;
+  background-size: cover;
+}
