@@ -109,3 +109,9 @@ a {
   // background: url('/assets/images/login-bg-img.jpg') no-repeat center center;
   // background-size: cover;
 }
+
+.clickable-link {
+  text-decoration: underline;   /* Underline the text */
+  color: #007bff;               /* Bootstrap blue (optional) */
+  cursor: pointer;              /* Show pointer on hover */
+}

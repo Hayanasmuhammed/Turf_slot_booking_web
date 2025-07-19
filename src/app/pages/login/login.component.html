@@ -41,9 +41,11 @@
   <div class="d-flex justify-content-center align-items-center min-vh-100">
     <div
       class="form-container bg-white rounded-4 shadow p-4 w-100"
-      style="max-width: 400px;border: 1px solid #97adc2;"
+      style="max-width: 400px; border: 1px solid #97adc2"
     >
-      <h3 class="text-center mb-4 fw-bold">Login Form</h3>
+      <h3 class="text-center mb-4 fw-bold">
+        {{ isLogin ? "Login Form" : "Signup Form" }}
+      </h3>
 
       <div class="d-flex mb-4 toggle-buttons">
         <button
@@ -63,6 +65,25 @@
       </div>
 
       <form (ngSubmit)="onSubmit()" [formGroup]="authForm" novalidate>
+        <div class="mb-3" *ngIf="!isLogin">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Name"
+            formControlName="name"
+            required
+            [ngClass]="{
+              'is-invalid': isSubmitted && authForm.get('name')?.invalid
+            }"
+          />
+
+          <div
+            class="invalid-feedback"
+            *ngIf="isSubmitted && authForm.get('name')?.hasError('required')"
+          >
+            Name is required.
+          </div>
+        </div>
         <div class="mb-3">
           <input
             type="email"
@@ -70,7 +91,16 @@
             placeholder="Email Address"
             formControlName="email"
             required
+            [ngClass]="{
+              'is-invalid': isSubmitted && authForm.get('email')?.invalid
+            }"
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="isSubmitted && authForm.get('email')?.hasError('required')"
+          >
+            Email required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -80,7 +110,47 @@
             placeholder="Password"
             formControlName="password"
             required
+            [ngClass]="{
+              'is-invalid': isSubmitted && authForm.get('password')?.invalid
+            }"
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              isSubmitted && authForm.get('password')?.hasError('required')
+            "
+          >
+            Password required.
+          </div>
+        </div>
+
+        <div class="mb-3" *ngIf="!isLogin">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Confirm Password"
+            formControlName="confirmPassword"
+            required
+            [ngClass]="{
+              'is-invalid':
+                isSubmitted && authForm.get('confirmPassword')?.invalid
+            }"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              isSubmitted &&
+              authForm.get('confirmPassword')?.hasError('required')
+            "
+          >
+            Confirm Password required.
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="isSubmitted && authForm.hasError('passwordMismatch')"
+          >
+            Password and Confirm Password do not match.
+          </div>
         </div>
 
         <div class="mb-3 text-end" *ngIf="isLogin">
@@ -96,11 +166,15 @@
         <div class="text-center">
           <span *ngIf="isLogin"
             >Not a member?
-            <a href="#" (click)="switchMode(false)">Signup now</a></span
+            <a (click)="switchMode(false)" class="clickable-link"
+              >Signup now</a
+            ></span
           >
           <span *ngIf="!isLogin"
             >Already have an account?
-            <a href="#" (click)="switchMode(true)">Login now</a></span
+            <a class="clickable-link" (click)="switchMode(true)"
+              >Login now</a
+            ></span
           >
         </div>
       </form>
