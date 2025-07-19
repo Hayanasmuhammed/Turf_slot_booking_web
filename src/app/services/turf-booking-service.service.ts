@@ -10,8 +10,13 @@ export class TurfBookingServiceService {
 
   constructor(private http: HttpClient) {}
 
-  signUpAUser(signUpReq: any): Observable<any> {
+  userSignup(signUpReq: any): Observable<any> {
     let url = `${this.apiUrl}/v1/user/signup`;
+    return this.http.post<any>(url, signUpReq);
+  }
+
+  userLogin(signUpReq: any): Observable<any> {
+    let url = `${this.apiUrl}/v1/user/login`;
     return this.http.post<any>(url, signUpReq);
   }
 }

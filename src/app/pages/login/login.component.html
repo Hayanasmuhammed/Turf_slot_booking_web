@@ -101,6 +101,13 @@
           >
             Email required.
           </div>
+
+          <div
+            class="invalid-feedback"
+            *ngIf="isSubmitted && authForm.get('email')?.hasError('email')"
+          >
+            Please enter a valid email address.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -133,7 +140,9 @@
             required
             [ngClass]="{
               'is-invalid':
-                isSubmitted && authForm.get('confirmPassword')?.invalid
+                isSubmitted &&
+                (authForm.get('confirmPassword')?.invalid ||
+                  authForm.hasError('passwordMismatch'))
             }"
           />
           <div
@@ -147,7 +156,11 @@
           </div>
           <div
             class="invalid-feedback"
-            *ngIf="isSubmitted && authForm.hasError('passwordMismatch')"
+            *ngIf="
+              isSubmitted &&
+              !authForm.get('confirmPassword')?.hasError('required') &&
+              authForm.hasError('passwordMismatch')
+            "
           >
             Password and Confirm Password do not match.
           </div>
@@ -159,8 +172,18 @@
           >
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mb-3 shadow-sm">
-          {{ isLogin ? "Login" : "Signup" }}
+        <button
+          type="submit"
+          class="btn btn-primary w-100 mb-3 shadow-sm d-flex justify-content-center align-items-center gap-2"
+          [disabled]="isLoading"
+        >
+          <span
+            *ngIf="isLoading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span *ngIf="!isLoading">{{ isLogin ? "Login" : "Signup" }}</span>
         </button>
 
         <div class="text-center">
