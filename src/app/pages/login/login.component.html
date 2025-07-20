@@ -41,7 +41,7 @@
   <div class="d-flex justify-content-center align-items-center min-vh-100">
     <div
       class="form-container bg-white rounded-4 shadow p-4 w-100"
-      style="max-width: 400px; border: 1px solid #97adc2"
+      style="max-width: 400px; border: 1px solid #0e8f12;"
     >
       <h3 class="text-center mb-4 fw-bold">
         {{ isLogin ? "Login Form" : "Signup Form" }}
@@ -50,6 +50,7 @@
       <div class="d-flex mb-4 toggle-buttons">
         <button
           class="btn w-50 rounded-start toggle-btn"
+          
           [class.active]="isLogin"
           (click)="switchMode(true)"
         >
@@ -59,6 +60,7 @@
           class="btn w-50 rounded-end toggle-btn"
           [class.active]="!isLogin"
           (click)="switchMode(false)"
+          
         >
           Signup
         </button>
@@ -174,7 +176,8 @@
 
         <button
           type="submit"
-          class="btn btn-primary w-100 mb-3 shadow-sm d-flex justify-content-center align-items-center gap-2"
+          class="btn w-100 mb-3 shadow-sm d-flex justify-content-center align-items-center gap-2"
+          style="background-color: #4caf50;color: white;"
           [disabled]="isLoading"
         >
           <span
@@ -183,7 +186,7 @@
             role="status"
             aria-hidden="true"
           ></span>
-          <span *ngIf="!isLoading">{{ isLogin ? "Login" : "Signup" }}</span>
+          <span *ngIf="!isLoading" >{{ isLogin ? "Login" : "Signup" }}</span>
         </button>
 
         <div class="text-center">
