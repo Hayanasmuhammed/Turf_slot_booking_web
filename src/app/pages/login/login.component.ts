@@ -65,14 +65,13 @@ export class LoginComponent implements OnInit {
       this.turfBookingService.userLogin(formData).subscribe({
         next: (response: any) => {
           this.toastr.success('Login successful');
-          this.isLoading=false;
+          this.isLoading = false;
         },
         error: (error: any) => {
-          this.isLoading=false;
+          this.isLoading = false;
           if (error.error.message === 'Invalid email or password') {
             this.toastr.error(error.error.message);
-          }
-          else{
+          } else {
             this.toastr.error('Something went wrong, Try again later');
           }
         },
@@ -81,11 +80,16 @@ export class LoginComponent implements OnInit {
       this.turfBookingService.userSignup(formData).subscribe({
         next: (response: any) => {
           this.toastr.success('Signup successful');
-          this.isLoading=false;
+          this.isLoading = false;
         },
         error: (error: any) => {
-          this.toastr.error('Something went wrong, Try again later');
-          this.isLoading=false;
+          if (error.error.message === 'Already registerd') {
+            this.toastr.error(error.error.message);
+          } else {
+            this.toastr.error('Something went wrong, Try again later');
+          }
+
+          this.isLoading = false;
         },
       });
     }
