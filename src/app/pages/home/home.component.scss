@@ -146,3 +146,15 @@ footer a:hover {
   font-weight: bold;
 }
 
+.feedback-card {
+  border: 2px solid #198754; /* Bootstrap success green */
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.feedback-card:hover {
+  transform: translateY(-5px);
+  border-color: #157347; /* Slightly darker green on hover */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
