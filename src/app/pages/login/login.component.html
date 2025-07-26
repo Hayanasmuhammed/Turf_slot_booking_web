@@ -41,169 +41,288 @@
   <div class="d-flex justify-content-center align-items-center min-vh-100">
     <div
       class="form-container bg-white rounded-4 shadow p-4 w-100"
-      style="max-width: 400px; border: 1px solid #0e8f12;"
+      style="max-width: 400px; border: 1px solid #0e8f12"
     >
-      <h3 class="text-center mb-4 fw-bold">
-        {{ isLogin ? "Login Form" : "Signup Form" }}
-      </h3>
+      <div *ngIf="!isForgotPassword">
+        <h3 class="text-center mb-4 fw-bold">
+          {{ isLogin ? "Login Form" : "Signup Form" }}
+        </h3>
 
-      <div class="d-flex mb-4 toggle-buttons">
-        <button
-          class="btn w-50 rounded-start toggle-btn"
-          
-          [class.active]="isLogin"
-          (click)="switchMode(true)"
-        >
-          Login
-        </button>
-        <button
-          class="btn w-50 rounded-end toggle-btn"
-          [class.active]="!isLogin"
-          (click)="switchMode(false)"
-          
-        >
-          Signup
-        </button>
+        <div class="d-flex mb-4 toggle-buttons">
+          <button
+            class="btn w-50 rounded-start toggle-btn"
+            [class.active]="isLogin"
+            (click)="switchMode(true)"
+          >
+            Login
+          </button>
+          <button
+            class="btn w-50 rounded-end toggle-btn"
+            [class.active]="!isLogin"
+            (click)="switchMode(false)"
+          >
+            Signup
+          </button>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="authForm" novalidate>
+          <div class="mb-3" *ngIf="!isLogin">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Name"
+              formControlName="name"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['loginOrSignUp'] && authForm.get('name')?.invalid
+              }"
+            />
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                authForm.get('name')?.hasError('required')
+              "
+            >
+              Name is required.
+            </div>
+          </div>
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email Address"
+              formControlName="email"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['loginOrSignUp'] && authForm.get('email')?.invalid
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                authForm.get('email')?.hasError('required')
+              "
+            >
+              Email required.
+            </div>
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                authForm.get('email')?.hasError('email')
+              "
+            >
+              Please enter a valid email address.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Password"
+              formControlName="password"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['loginOrSignUp'] &&
+                  authForm.get('password')?.invalid
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                authForm.get('password')?.hasError('required')
+              "
+            >
+              Password required.
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="!isLogin">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirm Password"
+              formControlName="confirmPassword"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['loginOrSignUp'] &&
+                  (authForm.get('confirmPassword')?.invalid ||
+                    authForm.hasError('passwordMismatch'))
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                authForm.get('confirmPassword')?.hasError('required')
+              "
+            >
+              Confirm Password required.
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['loginOrSignUp'] &&
+                !authForm.get('confirmPassword')?.hasError('required') &&
+                authForm.hasError('passwordMismatch')
+              "
+            >
+              Password and Confirm Password do not match.
+            </div>
+          </div>
+
+          <div
+            class="mb-3 text-end"
+            *ngIf="isLogin"
+            (click)="isForgotPassword = true"
+          >
+            <a class="text-decoration-none text-primary small"
+              >Forgot password?</a
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="btn w-100 mb-3 shadow-sm d-flex justify-content-center align-items-center gap-2"
+            style="background-color: #4caf50; color: white"
+            [disabled]="isLoading['loginOrSignUp']"
+          >
+            <span
+              *ngIf="isLoading['loginOrSignUp']"
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="!isLoading['loginOrSignUp']">{{
+              isLogin ? "Login" : "Signup"
+            }}</span>
+          </button>
+
+          <div class="text-center">
+            <span *ngIf="isLogin"
+              >Not a member?
+              <a (click)="switchMode(false)" class="clickable-link"
+                >Signup now</a
+              ></span
+            >
+            <span *ngIf="!isLogin"
+              >Already have an account?
+              <a class="clickable-link" (click)="switchMode(true)"
+                >Login now</a
+              ></span
+            >
+          </div>
+        </form>
       </div>
-
-      <form (ngSubmit)="onSubmit()" [formGroup]="authForm" novalidate>
-        <div class="mb-3" *ngIf="!isLogin">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Name"
-            formControlName="name"
-            required
-            [ngClass]="{
-              'is-invalid': isSubmitted && authForm.get('name')?.invalid
-            }"
-          />
-
-          <div
-            class="invalid-feedback"
-            *ngIf="isSubmitted && authForm.get('name')?.hasError('required')"
-          >
-            Name is required.
-          </div>
-        </div>
-        <div class="mb-3">
-          <input
-            type="email"
-            class="form-control"
-            placeholder="Email Address"
-            formControlName="email"
-            required
-            [ngClass]="{
-              'is-invalid': isSubmitted && authForm.get('email')?.invalid
-            }"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="isSubmitted && authForm.get('email')?.hasError('required')"
-          >
-            Email required.
+      <div *ngIf="isForgotPassword">
+        <form (ngSubmit)="onSubmitOtp()" [formGroup]="otpForm" novalidate>
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Enter your registered email"
+              formControlName="email"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['otp'] && otpForm.get('email')?.invalid
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['otp'] && otpForm.get('email')?.hasError('required')
+              "
+            >
+              Email required.
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                isSubmitted['otp'] && otpForm.get('email')?.hasError('email')
+              "
+            >
+              Please enter a valid email address.
+            </div>
           </div>
 
-          <div
-            class="invalid-feedback"
-            *ngIf="isSubmitted && authForm.get('email')?.hasError('email')"
+          <button
+            type="submit"
+            class="btn btn-primary w-100 mb-3"
+            [disabled]="isLoading['otp']"
           >
-            Please enter a valid email address.
-          </div>
-        </div>
+            <span
+              *ngIf="isLoading['otp']"
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="!isLoading['otp']">Get OTP</span>
+          </button>
+        </form>
 
-        <div class="mb-3">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password"
-            formControlName="password"
-            required
-            [ngClass]="{
-              'is-invalid': isSubmitted && authForm.get('password')?.invalid
-            }"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              isSubmitted && authForm.get('password')?.hasError('required')
-            "
-          >
-            Password required.
-          </div>
-        </div>
-
-        <div class="mb-3" *ngIf="!isLogin">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Confirm Password"
-            formControlName="confirmPassword"
-            required
-            [ngClass]="{
-              'is-invalid':
-                isSubmitted &&
-                (authForm.get('confirmPassword')?.invalid ||
-                  authForm.hasError('passwordMismatch'))
-            }"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              isSubmitted &&
-              authForm.get('confirmPassword')?.hasError('required')
-            "
-          >
-            Confirm Password required.
-          </div>
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              isSubmitted &&
-              !authForm.get('confirmPassword')?.hasError('required') &&
-              authForm.hasError('passwordMismatch')
-            "
-          >
-            Password and Confirm Password do not match.
-          </div>
-        </div>
-
-        <div class="mb-3 text-end" *ngIf="isLogin">
-          <a href="#" class="text-decoration-none text-primary small"
-            >Forgot password?</a
-          >
-        </div>
-
-        <button
-          type="submit"
-          class="btn w-100 mb-3 shadow-sm d-flex justify-content-center align-items-center gap-2"
-          style="background-color: #4caf50;color: white;"
-          [disabled]="isLoading"
+        <form
+          *ngIf="isOtpSent"
+          (ngSubmit)="onSubmitChangePassword()"
+          [formGroup]="changePasswordForm"
+          novalidate
         >
-          <span
-            *ngIf="isLoading"
-            class="spinner-border spinner-border-sm"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          <span *ngIf="!isLoading" >{{ isLogin ? "Login" : "Signup" }}</span>
-        </button>
+          <div class="mb-3">
+            <input
+              type="text"
+              maxlength="6"
+              class="form-control"
+              placeholder="Enter 6-digit OTP"
+              formControlName="otp"
+              required
+            />
+          </div>
 
-        <div class="text-center">
-          <span *ngIf="isLogin"
-            >Not a member?
-            <a (click)="switchMode(false)" class="clickable-link"
-              >Signup now</a
-            ></span
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="New Password"
+              formControlName="newPassword"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirm New Password"
+              formControlName="confirmNewPassword"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-success w-100"
+            [disabled]="isLoading['loginOrSignUp']"
           >
-          <span *ngIf="!isLogin"
-            >Already have an account?
-            <a class="clickable-link" (click)="switchMode(true)"
-              >Login now</a
-            ></span
+            Change Password
+          </button>
+        </form>
+
+        <div class="text-center mt-3">
+          <a (click)="cancelForgotPassword()" class="clickable-link"
+            >Back to Login</a
           >
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>

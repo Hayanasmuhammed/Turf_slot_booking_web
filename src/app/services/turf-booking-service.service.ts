@@ -19,4 +19,11 @@ export class TurfBookingServiceService {
     let url = `${this.apiUrl}/v1/user/login`;
     return this.http.post<any>(url, signUpReq);
   }
+
+  sendOtp(email:string): Observable<any> {
+    console.log('Sending OTP to:', email);
+    
+    let url = `${this.apiUrl}/v1/email/${email}/forgot_password`;
+    return this.http.get<any>(url);
+  }
 }

@@ -20,8 +20,12 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
   isLogin = true;
   authForm!: FormGroup;
-  isSubmitted = false;
-  isLoading = false;
+  isSubmitted :any= {};
+  isLoading: any = {};
+  isForgotPassword = false;
+  otpForm!: FormGroup;
+  isOtpSent: boolean = false;
+  changePasswordForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +41,7 @@ export class LoginComponent implements OnInit {
     this.isLogin = isLogin;
     this.authForm.reset();
     this.setValidators();
-    this.isSubmitted = false;
+    this.isSubmitted['loginOrSignUp'] = false;
   }
 
   initForm(): void {
@@ -48,27 +52,37 @@ export class LoginComponent implements OnInit {
       name: [''],
     });
 
+    this.otpForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
+
+    this.changePasswordForm = this.fb.group({
+      otp: ['', [Validators.required, Validators.maxLength(6)]],
+      newPassword: ['', Validators.required],
+      confirmNewPassword: ['', Validators.required],
+    });
+
     this.setValidators();
   }
 
   onSubmit(): void {
     console.log('errors', this.authForm.errors);
 
-    this.isSubmitted = true;
+    this.isSubmitted['loginOrSignUp']= true;
     if (this.authForm.invalid) {
       return;
     }
-    this.isLoading = true;
+    this.isLoading['loginOrSignUp'] = true;
     const formData = this.authForm.value;
     if (this.isLogin) {
       console.log('Login', formData);
       this.turfBookingService.userLogin(formData).subscribe({
         next: (response: any) => {
           this.toastr.success('Login successful');
-          this.isLoading = false;
+          this.isLoading['loginOrSignUp'] = false;
         },
         error: (error: any) => {
-          this.isLoading = false;
+          this.isLoading['loginOrSignUp'] = false;
           if (error.error.message === 'Invalid email or password') {
             this.toastr.error(error.error.message);
           } else {
@@ -80,7 +94,7 @@ export class LoginComponent implements OnInit {
       this.turfBookingService.userSignup(formData).subscribe({
         next: (response: any) => {
           this.toastr.success('Signup successful');
-          this.isLoading = false;
+          this.isLoading['loginOrSignUp'] = false;
         },
         error: (error: any) => {
           if (error.error.message === 'Already registerd') {
@@ -89,7 +103,7 @@ export class LoginComponent implements OnInit {
             this.toastr.error('Something went wrong, Try again later');
           }
 
-          this.isLoading = false;
+          this.isLoading['loginOrSignUp'] = false;
         },
       });
     }
@@ -122,4 +136,36 @@ export class LoginComponent implements OnInit {
 
     return password === confirmPassword ? null : { passwordMismatch: true };
   };
+
+ // onSubmitOtp() {}
+
+  onSubmitChangePassword() {}
+
+  cancelForgotPassword(): void {}
+
+  onSubmitOtp() {
+    //this.isOtpSent = true;
+    this.isSubmitted['otp']= true;
+    if (this.otpForm.invalid) {
+      return;
+    }
+    
+    this.isLoading['otp'] = true;
+    this.turfBookingService
+      .sendOtp(this.otpForm.get('email')?.value)
+      .subscribe({
+        next: (response: any) => {
+          this.toastr.success('OTP sent successfully');
+          this.isLoading['otp'] = false;
+        },
+        error: (error: any) => {
+          if (error.error.message === 'Not a registered user') {
+            this.toastr.error(error.error.message);
+          } else {
+            this.toastr.error('Something went wrong, Try again later');
+          }
+          this.isLoading['otp'] = false;
+        },
+      });
+  }
 }
