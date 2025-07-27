@@ -224,7 +224,7 @@
           </div>
         </form>
       </div>
-      <div *ngIf="isForgotPassword">
+      <div *ngIf="isForgotPassword && !showOtpModal">
         <form (ngSubmit)="onSubmitOtp()" [formGroup]="otpForm" novalidate>
           <div class="mb-3">
             <input
@@ -267,11 +267,52 @@
               role="status"
               aria-hidden="true"
             ></span>
-            <span *ngIf="!isLoading['otp']">Get OTP</span>
+            <span *ngIf="!isLoading['otp']">Verify OTP</span>
           </button>
         </form>
+      </div>
 
+      <!-- <div class="otp-container" *ngIf="isOtpSent">
+        <input
+          *ngFor="let digit of otpDigits; let i = index"
+          type="text"
+          maxlength="1"
+          class="otp-box"
+          [(ngModel)]="otp[i]"
+          (input)="onInput(i)"
+          (keydown)="onBackspace(i, $event)"
+          #otpInput
+        />
+      </div> -->
+
+      <!-- <div *ngIf="isOtpValid">
         <form
+          [formGroup]="changePasswordForm"
+          (ngSubmit)="submitChangePassword()"
+        >
+          <input
+            formControlName="newPassword"
+            type="password"
+            placeholder="New Password"
+          />
+          <input
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+          />
+          <button type="submit">Change Password</button>
+        </form>
+      </div> -->
+      <div *ngIf="showOtpModal">
+        <app-otp-validation
+          *ngIf="showOtpModal"
+          (otpValidated)="onOtpValidated()"
+          (modalClosed)="showOtpModal = false"
+        >
+        </app-otp-validation>
+      </div>
+      <div>
+        <!-- <form
           *ngIf="isOtpSent"
           (ngSubmit)="onSubmitChangePassword()"
           [formGroup]="changePasswordForm"
@@ -315,7 +356,7 @@
           >
             Change Password
           </button>
-        </form>
+        </form> -->
 
         <div class="text-center mt-3">
           <a (click)="cancelForgotPassword()" class="clickable-link"

@@ -115,3 +115,15 @@ a {
   color: #0e8f12;               /* Bootstrap blue (optional) */
   cursor: pointer;              /* Show pointer on hover */
 }
+
+.otp-container {
+  display: flex;
+  gap: 10px;
+}
+
+.otp-box {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  text-align: center;
+}

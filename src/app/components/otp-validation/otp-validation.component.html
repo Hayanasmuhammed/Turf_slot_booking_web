@@ -1,0 +1,25 @@
+<div class="modal-backdrop">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h5>OTP Verification</h5>
+      <button (click)="close()" class="close-btn">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <p style="font-size: 15px" class="text-info-emphasis">
+        Enter the 6-digit OTP sent to your email:
+      </p>
+      <div class="otp-container">
+        <input
+          *ngFor="let d of otpDigits; let i = index"
+          type="text"
+          maxlength="1"
+          [(ngModel)]="otp[i]"
+          (input)="onInput(i)"
+          (keydown)="onBackspace(i, $event)"
+          #otpInput
+        />
+      </div>
+    </div>
+  </div>
+</div>

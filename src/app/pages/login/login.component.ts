@@ -1,8 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -10,27 +17,36 @@ import { RouterModule } from '@angular/router';
 import { TurfBookingServiceService } from '../../services/turf-booking-service.service';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { OtpValidationComponent } from '../../components/otp-validation/otp-validation.component';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, FormsModule,OtpValidationComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   isLogin = true;
   authForm!: FormGroup;
-  isSubmitted :any= {};
+  isSubmitted: any = {};
   isLoading: any = {};
   isForgotPassword = false;
   otpForm!: FormGroup;
-  isOtpSent: boolean = false;
+  // isOtpSent: boolean = false;
   changePasswordForm!: FormGroup;
+  otp: string[] = ['', '', '', '', '', ''];
+  otpDigits = new Array(6);
+  isOtpValid = false;
+  showOtpModal = false;
+  showChangePassword = false;
+
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
 
   constructor(
     private fb: FormBuilder,
     private turfBookingService: TurfBookingServiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+   // private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +84,7 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     console.log('errors', this.authForm.errors);
 
-    this.isSubmitted['loginOrSignUp']= true;
+    this.isSubmitted['loginOrSignUp'] = true;
     if (this.authForm.invalid) {
       return;
     }
@@ -137,26 +153,31 @@ export class LoginComponent implements OnInit {
     return password === confirmPassword ? null : { passwordMismatch: true };
   };
 
- // onSubmitOtp() {}
+  // onSubmitOtp() {}
 
   onSubmitChangePassword() {}
 
   cancelForgotPassword(): void {}
 
   onSubmitOtp() {
-    //this.isOtpSent = true;
-    this.isSubmitted['otp']= true;
+    this.isSubmitted['otp'] = true;
     if (this.otpForm.invalid) {
       return;
     }
-    
-    this.isLoading['otp'] = true;
+
+    //this.isLoading['otp'] = true;
+    this.showOtpModal = true;
+    return;
+
     this.turfBookingService
       .sendOtp(this.otpForm.get('email')?.value)
       .subscribe({
         next: (response: any) => {
           this.toastr.success('OTP sent successfully');
           this.isLoading['otp'] = false;
+          this.showOtpModal = true;
+
+          
         },
         error: (error: any) => {
           if (error.error.message === 'Not a registered user') {
@@ -167,5 +188,28 @@ export class LoginComponent implements OnInit {
           this.isLoading['otp'] = false;
         },
       });
+  }
+
+  onInput(index: number) {
+    const input = this.otpInputs.toArray()[index].nativeElement;
+    if (this.otp[index].length > 0 && index < 5) {
+      this.otpInputs.toArray()[index + 1].nativeElement.focus();
+    }
+
+    if (this.otp.every((digit) => digit !== '')) {
+      const otpCode = this.otp.join('');
+      // this.validateOtp(otpCode);
+    }
+  }
+
+  onBackspace(index: number, event: KeyboardEvent) {
+    if (event.key === 'Backspace' && this.otp[index] === '' && index > 0) {
+      this.otpInputs.toArray()[index - 1].nativeElement.focus();
+    }
+  }
+
+  onOtpValidated() {
+    this.showChangePassword = true;
+    this.showOtpModal = false;
   }
 }
