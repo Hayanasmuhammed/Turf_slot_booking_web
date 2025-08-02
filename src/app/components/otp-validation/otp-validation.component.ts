@@ -3,11 +3,14 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   Output,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TurfBookingServiceService } from '../../services/turf-booking-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-otp-validation',
@@ -22,6 +25,12 @@ export class OtpValidationComponent {
   @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
   @Output() otpValidated = new EventEmitter<void>();
   @Output() modalClosed = new EventEmitter<void>();
+  @Input() email!: string;
+
+  constructor(
+    private turfBookingService: TurfBookingServiceService,
+    private toastr: ToastrService
+  ) {}
 
   onInput(index: number) {
     if (this.otp[index].length > 0 && index < 5) {
@@ -52,15 +61,28 @@ export class OtpValidationComponent {
 
   validateOtp(code: string) {
     // 🔁 Simulate API validation
-    if (code === '123456') {
-      this.otpValidated.emit(); // Inform parent
-    } else {
-      alert('Invalid OTP');
-      this.otp = ['', '', '', '', '', ''];
-      console.log('this.otp', this.otp);
-
-      this.otpInputs.first.nativeElement.focus();
-    }
+    this.turfBookingService
+      .validateOtp(this.email, parseInt(code, 10))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.toastr.success('OTP validated successfully!');
+            this.otpValidated.emit(); // Inform parent component
+          } else {
+            this.toastr.error('Invalid OTP, please try again.');
+            this.otp = ['', '', '', '', '', ''];
+            this.otpInputs.first.nativeElement.focus();
+          }
+        },
+      });
+    // if (code === '123456') {
+    //   this.otpValidated.emit(); // Inform parent
+    // } else {
+    //   alert('Invalid OTP');
+    //   this.otp = ['', '', '', '', '', ''];
+    //   console.log('this.otp', this.otp);
+    //   this.otpInputs.first.nativeElement.focus();
+    // }
   }
 
   close() {

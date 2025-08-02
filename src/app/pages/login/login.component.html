@@ -308,6 +308,7 @@
           *ngIf="showOtpModal"
           (otpValidated)="onOtpValidated()"
           (modalClosed)="showOtpModal = false"
+          [email]="otpForm.get('email')?.value"
         >
         </app-otp-validation>
       </div>
