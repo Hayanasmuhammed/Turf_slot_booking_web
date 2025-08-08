@@ -65,13 +65,14 @@ export class OtpValidationComponent {
       .validateOtp(this.email, parseInt(code, 10))
       .subscribe({
         next: (response) => {
-          if (response.success) {
+        
             this.toastr.success('OTP validated successfully!');
             this.otpValidated.emit(); // Inform parent component
+          }, error: (error: any) => {
+          if (error.error.message === 'Invalid OTP') {
+            this.toastr.error(error.error.message);
           } else {
-            this.toastr.error('Invalid OTP, please try again.');
-            this.otp = ['', '', '', '', '', ''];
-            this.otpInputs.first.nativeElement.focus();
+            this.toastr.error('Something went wrong, Try again later');
           }
         },
       });

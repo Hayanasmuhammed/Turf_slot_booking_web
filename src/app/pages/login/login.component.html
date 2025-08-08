@@ -186,7 +186,7 @@
             *ngIf="isLogin"
             (click)="isForgotPassword = true"
           >
-            <a class="text-decoration-none text-primary small"
+            <a class="text-decoration-underline text-primary small"
               >Forgot password?</a
             >
           </div>
@@ -211,13 +211,13 @@
           <div class="text-center">
             <span *ngIf="isLogin"
               >Not a member?
-              <a (click)="switchMode(false)" class="clickable-link"
+              <a (click)="switchMode(false)" class="text-decoration-underline text-primary small"
                 >Signup now</a
               ></span
             >
             <span *ngIf="!isLogin"
               >Already have an account?
-              <a class="clickable-link" (click)="switchMode(true)"
+              <a class="text-decoration-underline text-primary small" (click)="switchMode(true)"
                 >Login now</a
               ></span
             >
@@ -225,7 +225,7 @@
         </form>
       </div>
       <div *ngIf="isForgotPassword && !showOtpModal">
-        <form (ngSubmit)="onSubmitOtp()" [formGroup]="otpForm" novalidate>
+        <form (ngSubmit)="onSubmitForgotPasswordEmail()" [formGroup]="otpForm" novalidate>
           <div class="mb-3">
             <input
               type="email"
@@ -268,6 +268,7 @@
               aria-hidden="true"
             ></span>
             <span *ngIf="!isLoading['otp']">Verify OTP</span>
+           
           </button>
         </form>
       </div>
@@ -359,8 +360,8 @@
           </button>
         </form> -->
 
-        <div class="text-center mt-3">
-          <a (click)="cancelForgotPassword()" class="clickable-link"
+        <div class="text-center mt-3" *ngIf="!this.isLoading['otp']">
+          <a (click)="cancelForgotPassword()" class="text-decoration-underline text-primary small" 
             >Back to Login</a
           >
         </div>

@@ -21,7 +21,13 @@ import { OtpValidationComponent } from '../../components/otp-validation/otp-vali
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, FormsModule,OtpValidationComponent],
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    OtpValidationComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -45,9 +51,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private turfBookingService: TurfBookingServiceService,
-    private toastr: ToastrService,
-   // private modalService: NgbModal
-  ) {}
+    private toastr: ToastrService
+  ) // private modalService: NgbModal
+  {}
 
   ngOnInit(): void {
     this.initForm();
@@ -157,18 +163,17 @@ export class LoginComponent implements OnInit {
 
   onSubmitChangePassword() {}
 
-  cancelForgotPassword(): void {}
+  cancelForgotPassword(): void {
+    this.isForgotPassword = false;
+  }
 
-  onSubmitOtp() {
+  onSubmitForgotPasswordEmail() {
     this.isSubmitted['otp'] = true;
     if (this.otpForm.invalid) {
       return;
     }
 
-    //this.isLoading['otp'] = true;
-    this.showOtpModal = true;
-    return;
-
+    this.isLoading['otp'] = true;
     this.turfBookingService
       .sendOtp(this.otpForm.get('email')?.value)
       .subscribe({
@@ -176,8 +181,6 @@ export class LoginComponent implements OnInit {
           this.toastr.success('OTP sent successfully');
           this.isLoading['otp'] = false;
           this.showOtpModal = true;
-
-          
         },
         error: (error: any) => {
           if (error.error.message === 'Not a registered user') {
@@ -209,6 +212,8 @@ export class LoginComponent implements OnInit {
   }
 
   onOtpValidated() {
+    console.log('inside otp is validated');
+
     this.showChangePassword = true;
     this.showOtpModal = false;
   }
