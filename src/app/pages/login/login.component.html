@@ -43,7 +43,7 @@
       class="form-container bg-white rounded-4 shadow p-4 w-100"
       style="max-width: 400px; border: 1px solid #0e8f12"
     >
-      <div *ngIf="!isForgotPassword">
+      <div *ngIf="!isForgotPassword && !showChangePassword">
         <h3 class="text-center mb-4 fw-bold">
           {{ isLogin ? "Login Form" : "Signup Form" }}
         </h3>
@@ -211,13 +211,17 @@
           <div class="text-center">
             <span *ngIf="isLogin"
               >Not a member?
-              <a (click)="switchMode(false)" class="text-decoration-underline text-primary small"
+              <a
+                (click)="switchMode(false)"
+                class="text-decoration-underline text-primary small"
                 >Signup now</a
               ></span
             >
             <span *ngIf="!isLogin"
               >Already have an account?
-              <a class="text-decoration-underline text-primary small" (click)="switchMode(true)"
+              <a
+                class="text-decoration-underline text-primary small"
+                (click)="switchMode(true)"
                 >Login now</a
               ></span
             >
@@ -225,7 +229,11 @@
         </form>
       </div>
       <div *ngIf="isForgotPassword && !showOtpModal">
-        <form (ngSubmit)="onSubmitForgotPasswordEmail()" [formGroup]="otpForm" novalidate>
+        <form
+          (ngSubmit)="onSubmitForgotPasswordEmail()"
+          [formGroup]="otpForm"
+          novalidate
+        >
           <div class="mb-3">
             <input
               type="email"
@@ -268,7 +276,6 @@
               aria-hidden="true"
             ></span>
             <span *ngIf="!isLoading['otp']">Verify OTP</span>
-           
           </button>
         </form>
       </div>
@@ -313,21 +320,19 @@
         >
         </app-otp-validation>
       </div>
-      <div>
-        <!-- <form
-          *ngIf="isOtpSent"
+      <div *ngIf="showChangePassword">
+        <form
           (ngSubmit)="onSubmitChangePassword()"
           [formGroup]="changePasswordForm"
           novalidate
         >
           <div class="mb-3">
             <input
-              type="text"
-              maxlength="6"
+              type="email"
               class="form-control"
-              placeholder="Enter 6-digit OTP"
-              formControlName="otp"
-              required
+              [value]="otpForm.get('email')?.value"
+              readonly
+              disabled
             />
           </div>
 
@@ -353,15 +358,22 @@
 
           <button
             type="submit"
-            class="btn btn-success w-100"
-            [disabled]="isLoading['loginOrSignUp']"
+            class="btn btn-primary w-100 mb-3"
+            [disabled]="isLoading['changePassword']"
           >
-            Change Password
+            <span
+              *ngIf="isLoading['changePassword']"
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="!isLoading['changePassword']">Change Password</span>
           </button>
-        </form> -->
-
+        </form>
         <div class="text-center mt-3" *ngIf="!this.isLoading['otp']">
-          <a (click)="cancelForgotPassword()" class="text-decoration-underline text-primary small" 
+          <a
+            (click)="cancelForgotPassword()"
+            class="text-decoration-underline text-primary small"
             >Back to Login</a
           >
         </div>

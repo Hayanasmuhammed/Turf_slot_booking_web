@@ -51,9 +51,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private turfBookingService: TurfBookingServiceService,
-    private toastr: ToastrService
-  ) // private modalService: NgbModal
-  {}
+    private toastr: ToastrService // private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -161,7 +160,50 @@ export class LoginComponent implements OnInit {
 
   // onSubmitOtp() {}
 
-  onSubmitChangePassword() {}
+  onSubmitChangePassword() {
+    // Basic validation
+    if (this.changePasswordForm.invalid) {
+      return;
+    }
+
+    const newPassword = this.changePasswordForm.get('newPassword')?.value;
+    const confirmNewPassword =
+      this.changePasswordForm.get('confirmNewPassword')?.value;
+
+    // Password match validation
+    if (newPassword !== confirmNewPassword) {
+      this.changePasswordForm.setErrors({ passwordMismatch: true });
+      return;
+    }
+
+    // Password strength validation (example: min 6 chars, at least 1 number)
+    // const passwordPattern = /^(?=.*[0-9]).{6,}$/;
+    // if (!passwordPattern.test(newPassword)) {
+    //   this.changePasswordForm.get('newPassword')?.setErrors({ weak: true });
+    //   return;
+    // }
+
+    // Prepare payload
+    const payload = {
+      email: this.otpForm.get('email')?.value,
+      newPassword: newPassword,
+    };
+
+    this.isLoading['changePassword'] = true;
+
+    // Call your API/service here
+    this.turfBookingService.changePassword(payload).subscribe({
+      next: (res) => {
+        this.isLoading['changePassword'] = false;
+        // Handle success (e.g., show message, redirect)
+        
+      },
+      error: (err) => {
+        this.isLoading['changePassword'] = false;
+        // Handle error (e.g., show error message)
+      },
+    });
+  }
 
   cancelForgotPassword(): void {
     this.isForgotPassword = false;
@@ -181,6 +223,7 @@ export class LoginComponent implements OnInit {
           this.toastr.success('OTP sent successfully');
           this.isLoading['otp'] = false;
           this.showOtpModal = true;
+          this.isForgotPassword = false;
         },
         error: (error: any) => {
           if (error.error.message === 'Not a registered user') {
@@ -213,8 +256,7 @@ export class LoginComponent implements OnInit {
 
   onOtpValidated() {
     console.log('inside otp is validated');
-
-    this.showChangePassword = true;
     this.showOtpModal = false;
+    this.showChangePassword = true;
   }
 }

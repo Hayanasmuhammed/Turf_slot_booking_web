@@ -20,17 +20,23 @@ export class TurfBookingServiceService {
     return this.http.post<any>(url, signUpReq);
   }
 
-  sendOtp(email:string): Observable<any> {
+  sendOtp(email: string): Observable<any> {
     console.log('Sending OTP to:', email);
-    
+
     let url = `${this.apiUrl}/v1/email/${email}/forgot_password`;
     return this.http.get<any>(url);
   }
 
-  validateOtp(email:string,otp:number): Observable<any> {
+  validateOtp(email: string, otp: number): Observable<any> {
     console.log('Sending OTP to:', email);
-    
+
     let url = `${this.apiUrl}/v1/email/${email}/otp/${otp}`;
     return this.http.get<any>(url);
+  }
+
+  changePassword(signUpReq: any): Observable<any> {
+    /// console.log('Sending OTP to:', email);
+    let url = `${this.apiUrl}/v1/user/password`;
+    return this.http.put<any>(url, signUpReq);
   }
 }
