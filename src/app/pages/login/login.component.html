@@ -43,7 +43,7 @@
       class="form-container bg-white rounded-4 shadow p-4 w-100"
       style="max-width: 400px; border: 1px solid #0e8f12"
     >
-      <div *ngIf="!isForgotPassword && !showChangePassword">
+      <div *ngIf="showLoginSection">
         <h3 class="text-center mb-4 fw-bold">
           {{ isLogin ? "Login Form" : "Signup Form" }}
         </h3>
@@ -184,7 +184,7 @@
           <div
             class="mb-3 text-end"
             *ngIf="isLogin"
-            (click)="isForgotPassword = true"
+            (click)="onClickForgotPassword()"
           >
             <a class="text-decoration-underline text-primary small"
               >Forgot password?</a
@@ -330,10 +330,19 @@
             <input
               type="email"
               class="form-control"
-              [value]="otpForm.get('email')?.value"
+              formControlName="email"
               readonly
-              disabled
+              [disabled]="true"
+              
             />
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="
+                isSubmitted['changePassword'] && !otpForm.get('email')?.value
+              "
+            >
+              Email is required.
+            </div>
           </div>
 
           <div class="mb-3">
@@ -343,7 +352,21 @@
               placeholder="New Password"
               formControlName="newPassword"
               required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['changePassword'] &&
+                  changePasswordForm.get('newPassword')?.invalid
+              }"
             />
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="
+                isSubmitted['changePassword'] &&
+                changePasswordForm.get('newPassword')?.hasError('required')
+              "
+            >
+              New Password is required.
+            </div>
           </div>
 
           <div class="mb-3">
@@ -353,9 +376,37 @@
               placeholder="Confirm New Password"
               formControlName="confirmNewPassword"
               required
+              [ngClass]="{
+                'is-invalid':
+                  isSubmitted['changePassword'] &&
+                  (changePasswordForm.get('confirmNewPassword')?.invalid ||
+                    changePasswordForm.hasError('passwordMismatch'))
+              }"
             />
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="
+                isSubmitted['changePassword'] &&
+                changePasswordForm
+                  .get('confirmNewPassword')
+                  ?.hasError('required')
+              "
+            >
+              Confirm New Password is required.
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="
+                isSubmitted['changePassword'] &&
+                !changePasswordForm
+                  .get('confirmNewPassword')
+                  ?.hasError('required') &&
+                changePasswordForm.hasError('passwordMismatch')
+              "
+            >
+              New Password and Confirm New Password do not match.
+            </div>
           </div>
-
           <button
             type="submit"
             class="btn btn-primary w-100 mb-3"
@@ -370,6 +421,7 @@
             <span *ngIf="!isLoading['changePassword']">Change Password</span>
           </button>
         </form>
+
         <div class="text-center mt-3" *ngIf="!this.isLoading['otp']">
           <a
             (click)="cancelForgotPassword()"

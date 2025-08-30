@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
   isOtpValid = false;
   showOtpModal = false;
   showChangePassword = false;
+  showLoginSection = true;
 
   @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
 
@@ -78,7 +79,7 @@ export class LoginComponent implements OnInit {
     });
 
     this.changePasswordForm = this.fb.group({
-      otp: ['', [Validators.required, Validators.maxLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
       newPassword: ['', Validators.required],
       confirmNewPassword: ['', Validators.required],
     });
@@ -162,17 +163,24 @@ export class LoginComponent implements OnInit {
 
   onSubmitChangePassword() {
     // Basic validation
-    if (this.changePasswordForm.invalid) {
-      return;
-    }
-
+    console.log('inside change password');
+    this.isSubmitted['changePassword'] = true;
     const newPassword = this.changePasswordForm.get('newPassword')?.value;
     const confirmNewPassword =
       this.changePasswordForm.get('confirmNewPassword')?.value;
+    if (this.changePasswordForm.invalid) {
+      console.log('inside invalid return', this.changePasswordForm);
+      console.log('confirmNewPassword', confirmNewPassword);
+      console.log('newPassword', newPassword);
+
+      return;
+    }
 
     // Password match validation
     if (newPassword !== confirmNewPassword) {
       this.changePasswordForm.setErrors({ passwordMismatch: true });
+      console.log('inside error return');
+
       return;
     }
 
@@ -186,7 +194,7 @@ export class LoginComponent implements OnInit {
     // Prepare payload
     const payload = {
       email: this.otpForm.get('email')?.value,
-      newPassword: newPassword,
+      password: newPassword,
     };
 
     this.isLoading['changePassword'] = true;
@@ -196,7 +204,9 @@ export class LoginComponent implements OnInit {
       next: (res) => {
         this.isLoading['changePassword'] = false;
         // Handle success (e.g., show message, redirect)
-        
+        this.toastr.success('Password changed successfully');
+        this.showLoginSection = true;
+        this.showChangePassword = false;
       },
       error: (err) => {
         this.isLoading['changePassword'] = false;
@@ -258,5 +268,13 @@ export class LoginComponent implements OnInit {
     console.log('inside otp is validated');
     this.showOtpModal = false;
     this.showChangePassword = true;
+    this.changePasswordForm
+      .get('email')
+      ?.setValue(this.otpForm.get('email')?.value);
+  }
+
+  onClickForgotPassword() {
+    this.isForgotPassword = true;
+    this.showLoginSection = false;
   }
 }
