@@ -188,7 +188,16 @@
           Book your slot for football, cricket, tennis, basketball, and
           volleyball
         </p>
-        <button class="btn btn-success btn-lg btn-book">Book Now</button>
+        <button class="btn btn-success btn-lg btn-book">
+          <a
+            class="nav-link"
+            routerLink="slot_book"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+           Book Now
+          </a>
+          </button>
       </div>
     </div>
   </div>

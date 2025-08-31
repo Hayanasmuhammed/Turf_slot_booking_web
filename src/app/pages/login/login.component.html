@@ -315,7 +315,7 @@
         <app-otp-validation
           *ngIf="showOtpModal"
           (otpValidated)="onOtpValidated()"
-          (modalClosed)="showOtpModal = false"
+          (modalClosed)="onModalClosed()"
           [email]="otpForm.get('email')?.value"
         >
         </app-otp-validation>
@@ -333,7 +333,6 @@
               formControlName="email"
               readonly
               [disabled]="true"
-              
             />
             <div
               class="invalid-feedback d-block"
@@ -421,14 +420,16 @@
             <span *ngIf="!isLoading['changePassword']">Change Password</span>
           </button>
         </form>
-
-        <div class="text-center mt-3" *ngIf="!this.isLoading['otp']">
-          <a
-            (click)="cancelForgotPassword()"
-            class="text-decoration-underline text-primary small"
-            >Back to Login</a
-          >
-        </div>
+      </div>
+      <div
+        class="text-center mt-3"
+        *ngIf="!this.isLoading['otp'] && !this.showLoginSection"
+      >
+        <a
+          (click)="cancelForgotPassword()"
+          class="text-decoration-underline text-primary small"
+          >Back to Login</a
+        >
       </div>
     </div>
   </div>

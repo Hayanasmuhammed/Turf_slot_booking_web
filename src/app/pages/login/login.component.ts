@@ -217,6 +217,7 @@ export class LoginComponent implements OnInit {
 
   cancelForgotPassword(): void {
     this.isForgotPassword = false;
+    this.showLoginSection = true;
   }
 
   onSubmitForgotPasswordEmail() {
@@ -258,11 +259,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onBackspace(index: number, event: KeyboardEvent) {
-    if (event.key === 'Backspace' && this.otp[index] === '' && index > 0) {
-      this.otpInputs.toArray()[index - 1].nativeElement.focus();
-    }
-  }
+  
 
   onOtpValidated() {
     console.log('inside otp is validated');
@@ -276,5 +273,11 @@ export class LoginComponent implements OnInit {
   onClickForgotPassword() {
     this.isForgotPassword = true;
     this.showLoginSection = false;
+  }
+
+  onModalClosed(){
+    this.showOtpModal = false;
+    this.showChangePassword = false;
+    this.isForgotPassword=true;
   }
 }

@@ -1,1 +1,86 @@
-<p>slot-card works!</p>
+<div class="container py-4">
+  <div class="row">
+
+    <!-- LEFT SIDE: Pricing -->
+    <div class="col-md-4 pricing-section">
+      <h2 class="text-center fw-bold mb-4">Pricing</h2>
+
+      <div class="pricing-tiles">
+        <div
+          class="pricing-card cricket"
+          [class.active]="selectedSport === 'Cricket'"
+          (click)="selectSport('Cricket')">
+          <div class="pricing-icon">🏏</div>
+          <h5>Cricket</h5>
+          <p class="price">₹ 1000<span>/hr</span></p>
+          <button class="book-btn cricket-btn">Book now</button>
+        </div>
+
+        <div
+          class="pricing-card football"
+          [class.active]="selectedSport === 'Football'"
+          (click)="selectSport('Football')">
+          <div class="pricing-icon">⚽</div>
+          <h5>Football</h5>
+          <p class="price">₹ 1200<span>/hr</span></p>
+          <button class="book-btn football-btn">Book now</button>
+        </div>
+
+        <div
+          class="pricing-card nets"
+          [class.active]="selectedSport === 'Cricket Nets'"
+          (click)="selectSport('Cricket Nets')">
+          <div class="pricing-icon">🎯</div>
+          <h5>Cricket Nets</h5>
+          <p class="price">₹ 500<span>/hr</span></p>
+          <button class="book-btn nets-btn">Book now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Slot Booking -->
+    <div class="col-md-8">
+      <h2 class="text-center fw-bold mb-4">Book a Slot</h2>
+
+      <!-- Date Row -->
+      <div class="slot-wrapper mx-auto">
+        <div class="d-flex date-row mb-3">
+          <div *ngFor="let date of dates; let i = index"
+              class="date-card"
+              [class.active]="selectedDateIndex === i"
+              (click)="selectDate(i)">
+            <div class="date-label">{{ date.label }}</div>
+            <div class="date-full">{{ date.fullDate }}</div>
+          </div>
+        </div>
+
+        <!-- Slots Table -->
+        <div class="table-responsive">
+          <table class="table slot-table mb-0">
+            <thead>
+              <tr>
+                <th class="text-center">Time</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let slot of slots; let idx = index" [class.last-row]="idx === slots.length - 1">
+                <td class="time-col text-center">{{ slot.time }}</td>
+                <td class="status-col text-center">
+                  <button
+                    class="slot-btn"
+                    [ngClass]="slot.status === 'Booked' ? 'booked' : 'available'"
+                    [disabled]="slot.status === 'Booked'"
+                    (click)="bookSlot(slot)">
+                    {{ slot.status === 'Booked' ? 'Booked' : 'Book' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
